@@ -6,6 +6,13 @@ import promtConfig as pConf
 from promptPreprocess import DataPreparation,CoTPromptGenerator,LLMInterface,EvaluationMetrics,LLMOllamaInterface
 import sys
 from promtConfig import zeroShot_prompt
+import re
+import pandas as pd
+
+def extract_level(text):
+    pattern = r"level:\s*(\d+)"
+    match = re.search(pattern, text, re.IGNORECASE)
+    return int(match.group(1)) if match else None
 
 
 class ZeroShotCoTPipeline:
@@ -25,7 +32,10 @@ class ZeroShotCoTPipeline:
         # 2. Process each text
         predictions = []
         reasoning_chains = []
+        pd_result = pd.DataFrame(columns = ['predictions', 'true_level'])
 
+        #3. check connect
+        self.ollamaModel.check_connection()
         for ind,item in tqdm(data.iterrows()):
             row_dict = item.to_dict()
             text = row_dict['text']
@@ -48,14 +58,18 @@ class ZeroShotCoTPipeline:
 
             result = self.ollamaModel.generate_response(prompt)
             print(result['response'])
+            level = extract_level(result['response'])
+            new_row = pd.DataFrame([{'predictions': level, 'true_level': true_level}])
+            pd_result = pd.concat([pd_result, new_row], ignore_index=True)
+            if ind == 2:
+                break
 
-
+        self.save_results(pd_result,pConf.acc_output_path)
 
 
     def save_results(self, results, output_path):
         """Save results for analysis"""
-        with open(output_path, 'w') as f:
-            json.dump(results, f, indent=2)
+        results.to_csv(output_path, index=False)
 
 if __name__ == '__main__':
     zeroShot_CoT = ZeroShotCoTPipeline(pConf.model,pConf.corpus)

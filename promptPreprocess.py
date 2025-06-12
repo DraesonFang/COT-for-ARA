@@ -123,6 +123,7 @@ class LLMOllamaInterface:
             # Check server status
             response = self.session.get(f"{self.base_url}/api/tags")
             if response.status_code != 200:
+                print("connect faild")
                 return False
 
             # Check if model is available

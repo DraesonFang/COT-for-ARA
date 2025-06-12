@@ -1,8 +1,9 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
-model = "deepseek-r1:32b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
+model = "deepseek-r1:14b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
 corpus = 'weebit' #(options: weebit, onestopenglish)
 level = 5
+acc_output_path = "level.csv"
 
 zeroShot_prompt = """
         Analyze the readability of the following text step by step.
