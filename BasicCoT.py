@@ -71,6 +71,12 @@ class ZeroShotCoTPipeline:
         """Save results for analysis"""
         results.to_csv(output_path, index=False)
 
+    def calc_accuracy(self, result_path):
+        '''return a percentage,ground_truth is true_level, label of prediction is predictions'''
+        df = pd.read_csv(result_path)
+        return self.evaluator.calculate_accuracy(df['predictions'],df['true_level'])
+
+
 if __name__ == '__main__':
     zeroShot_CoT = ZeroShotCoTPipeline(pConf.model,pConf.corpus)
     zeroShot_CoT.run_pipeline()
