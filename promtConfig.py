@@ -1,14 +1,15 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
+UniversalCEFR_path = "UniversalCEFR/readme_en"
 model = "deepseek-r1:14b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
-corpus = 'weebit' #(options: weebit, onestopenglish)
+corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
 
 zeroShot_prompt = """
         Analyze the readability of the following text step by step.
 
-        Text: {text}
+        Text: {0}
 
         Let's think step by step:
 
@@ -39,9 +40,9 @@ zeroShot_prompt = """
         """
 
 newPrompt = """
-Analyze the readability of the following text using evidence-based Chain of Thought reasoning.
+Analyze the readability of the following text using following reasoning.
 
-Text: {text}
+Text: {0}
 
 Let's think step by step, analyzing each sentence individually before aggregating:
 
@@ -134,5 +135,19 @@ Based on sentence-level aggregation and research-validated thresholds:
 [7-9: Hard/Advanced] - Complex vocabulary, sophisticated syntax, challenging coherence, significant background knowledge required
 [10: Very Difficult/Expert] - Sustained complexity across multiple factors creating compound difficulty
 
-transform this result into out of {level}. the final assessment will be a mark (out of {level}). the format of result is as follow: level: (digit)
+transform this result into out of {level}. the final assessment will be a mark (out of {1}). the format of result is as follow: level: (digit)
 """
+
+CEFR_prompt = r'''
+Analyze the readability of the following text using CEFR Criteria.
+
+Text: {0}
+
+Let's thinks step by step
+
+output the exact CEFR level in the end, Format as the follow Regex:
+CEFR Level: X
+'''
+
+
+promptName = CEFR_prompt

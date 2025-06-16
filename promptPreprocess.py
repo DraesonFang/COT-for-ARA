@@ -12,6 +12,7 @@ class DataPreparation:
     def __init__(self):
         self.weebit_path = pConf.weebit_path
         self.onestopenglish_path = pConf.onestopenglish_path
+        self.UniversalCEFR_path = pConf.UniversalCEFR_path
 
     def load_corpus(self, corpus_name):
         """Load and standardize corpus format"""
@@ -19,6 +20,8 @@ class DataPreparation:
             return self.load_weebit()
         elif corpus_name == "onestopenglish":
             return self.load_onestopenglish()
+        elif corpus_name == "UniversalCEFR":
+            return self.load_UniversalCEFR()
 
     def load_weebit(self):
         # WeeBit has 5 levels: 7-8, 8-9, 9-10, 10-11, 11-12 age groups
@@ -28,6 +31,13 @@ class DataPreparation:
                          names=['text', 'label'],  # Custom column names
                         encoding='utf-8',
                         na_values=['NA', 'null'])  # Define what counts as NaN)
+        return df
+
+    def load_UniversalCEFR(self):
+        # OneStopEnglish has 3 levels: Elementary, Intermediate, Advanced
+        ds = load_dataset(self.UniversalCEFR_path,split="train")
+        df = pd.DataFrame(ds)
+        df = df.rename(columns={"cefr_level": "label"})
         return df
 
     def load_onestopenglish(self):
@@ -43,10 +53,10 @@ class DataPreparation:
 
 class CoTPromptGenerator:
     def __init__(self):
-        self.base_prompt_template = pConf.newPrompt
+        self.base_prompt_template = pConf.promptName
 
-    def generate_prompt(self, text, level):
-        return self.base_prompt_template.format(text=text,level=level)
+    def generate_prompt(self, *args):
+        return self.base_prompt_template.format(*args)
 
     def generate_few_shot_prompt(self, text, examples):
         """Optional: Add few examples for better performance"""

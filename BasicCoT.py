@@ -10,9 +10,12 @@ import re
 import pandas as pd
 
 def extract_level(text):
-    pattern = r"level:\s*(\d+)"
+    if pConf.promptName == pConf.newPrompt or pConf.promptName == pConf.zeroShot_prompt:
+        pattern = r"level:\s*(\d+)"
+    elif pConf.promptName == pConf.CEFR_prompt:
+        pattern = r"(?:CEFR|Level)[:\s]*([ABC][12]|Pre-[ABC][12]|[ABC][12][+-]?)"
     match = re.search(pattern, text, re.IGNORECASE)
-    return int(match.group(1)) if match else None
+    return match.group(1) if match else None
 
 
 class ZeroShotCoTPipeline:
@@ -49,7 +52,8 @@ class ZeroShotCoTPipeline:
             response = self.llm.output_llm(prompt)
             parsed = self.llm.parse_response(response)
             '''
-            prompt = self.prompt_gen.generate_prompt(text,pConf.level)
+            # prompt = self.prompt_gen.generate_prompt(text,pConf.level)
+            prompt = self.prompt_gen.generate_prompt(text)
             if not self.ollamaModel.check_connection():
                 print("Failed to connect to Ollama or model not available")
                 sys.exit(1)
