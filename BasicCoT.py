@@ -84,3 +84,4 @@ class ZeroShotCoTPipeline:
 if __name__ == '__main__':
     zeroShot_CoT = ZeroShotCoTPipeline(pConf.model,pConf.corpus)
     zeroShot_CoT.run_pipeline()
+    print(zeroShot_CoT.calc_accuracy(pConf.acc_output_path))
