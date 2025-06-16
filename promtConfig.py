@@ -139,7 +139,7 @@ transform this result into out of {level}. the final assessment will be a mark (
 """
 
 CEFR_prompt = r'''
-Analyze the readability of the following text using CEFR Criteria.
+Analyze the readability of the following text using CEFR(6 levels, A1,A2,B1,B2,C1,C2) Criteria.
 
 Text: {0}
 

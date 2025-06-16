@@ -34,9 +34,8 @@ class DataPreparation:
         return df
 
     def load_UniversalCEFR(self):
-        # OneStopEnglish has 3 levels: Elementary, Intermediate, Advanced
-        ds = load_dataset(self.UniversalCEFR_path,split="train")
-        df = pd.DataFrame(ds)
+        # UniversalCEFR has 6 levels
+        df = pd.read_json("hf://datasets/UniversalCEFR/readme_en/readme_en.json")
         df = df.rename(columns={"cefr_level": "label"})
         return df
 
