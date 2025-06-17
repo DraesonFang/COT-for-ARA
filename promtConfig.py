@@ -1,7 +1,7 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
 UniversalCEFR_path = "UniversalCEFR/readme_en"
-model = "deepseek-r1:14b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
+model = "deepseek-r1:32b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
 corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
@@ -145,7 +145,7 @@ Text: {0}
 
 Let's thinks step by step
 
-output the exact CEFR level in the end, Format as the follow Regex:
+output the exact CEFR level in the end, Format is as follow:
 CEFR Level: X
 '''
 

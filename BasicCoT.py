@@ -35,7 +35,7 @@ class ZeroShotCoTPipeline:
         # 2. Process each text
         predictions = []
         reasoning_chains = []
-        pd_result = pd.DataFrame(columns = ['predictions', 'true_level'])
+        pd_result = pd.DataFrame(columns = ['predictions', 'true_level','reasoning_chains'])
 
         #3. check connect
         self.ollamaModel.check_connection()
@@ -63,9 +63,9 @@ class ZeroShotCoTPipeline:
             result = self.ollamaModel.generate_response(prompt)
             print(result['response'])
             level = extract_level(result['response'])
-            new_row = pd.DataFrame([{'predictions': level, 'true_level': true_level}])
+            new_row = pd.DataFrame([{'predictions': level, 'true_level': true_level,'reasoning_chains': result['response']}])
             pd_result = pd.concat([pd_result, new_row], ignore_index=True)
-            if ind == 2:
+            if ind == 200:
                 break
 
         self.save_results(pd_result,pConf.acc_output_path)
