@@ -12,7 +12,7 @@ import pandas as pd
 def extract_level(text):
     if pConf.promptName == pConf.newPrompt or pConf.promptName == pConf.zeroShot_prompt:
         pattern = r"level:\s*(\d+)"
-    elif pConf.promptName == pConf.CEFR_prompt or pConf.promptName == pConf.CEFR_prompt2:
+    elif pConf.promptName == pConf.CEFR_prompt or pConf.promptName == pConf.CEFR_prompt_2:
         pattern = r"(?:CEFR|Level)[:\s]*([ABC][12]|Pre-[ABC][12]|[ABC][12][+-]?)"
     match = re.search(pattern, text, re.IGNORECASE)
     return match.group(1) if match else None
