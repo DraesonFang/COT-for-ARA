@@ -1,7 +1,7 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
 UniversalCEFR_path = "UniversalCEFR/readme_en"
-model = "deepseek-r1:32b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
+model = "deepseek-r1:14b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
 corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
@@ -149,5 +149,41 @@ output the exact CEFR level in the end, Format is as follow:
 CEFR Level: X
 '''
 
+CEFR_prompt_2 = r'''
+Analyze the readability of the following text using the Common European Framework of Reference for Languages (CEFR) criteria. The analysis should determine one of the following six levels: A1, A2, B1, B2, C1, or C2.
 
-promptName = CEFR_prompt
+Text: {0}
+
+To ensure the most accurate assessment, your step-by-step thinking should evaluate how well a learner at each CEFR level would be able to **understand and do** with the text, considering the following specific linguistic and communicative features:
+
+* **Vocabulary Assessment:**
+    * **Lexical Frequency & Range:** Are the words predominantly high-frequency (common everyday words) or do they include lower-frequency, specialized, academic, or idiomatic vocabulary?
+    * **Abstractness:** Are concepts concrete and easily visualizable, or do they involve abstract ideas, nuanced meanings, or implied information?
+    * **Vocabulary Depth:** Does understanding require distinguishing between subtle shades of meaning or recognizing specific collocations?
+
+* **Grammar & Sentence Structure Assessment:**
+    * **Syntactic Complexity:** Are sentences typically short and simple (e.g., SVO structure), or do they frequently employ complex structures such as multiple clauses, passive voice, inversions, or sophisticated conjunctions?
+    * **Grammatical Range:** What range of tenses, aspects, moods (e.g., subjunctive), and grammatical structures are used? Is the grammar consistently accurate?
+
+* **Cohesion & Coherence Assessment:**
+    * **Logical Organization:** Is the text's structure clear and easy to follow, or does it require the reader to infer relationships between ideas?
+    * **Discourse Markers:** Are connections between ideas explicitly signaled with simple linking words, or does it rely on more advanced discourse markers and implicit rhetorical relationships?
+    * **Referencing:** Are anaphoric/cataphoric references clear and unambiguous?
+
+* **Pragmatics & Register Assessment:**
+    * **Implied Meaning & Nuance:** Is the meaning always explicit, or does the text require the reader to infer implied meanings, understand irony, or recognize cultural references/idioms?
+    * **Formality:** Is the language consistently informal, neutral, or does it involve shifts in register and more formal/academic language?
+    * **Text Purpose:** What is the communicative purpose of the text (e.g., inform, persuade, entertain, instruct)? How does this impact the linguistic demands?
+
+* **Overall Text Type & Cognitive Demand:**
+    * **Genre Familiarity:** Is this a typical text type (e.g., simple notice, personal letter, news report, academic article, literary prose) for the target CEFR level?
+    * **Topic Familiarity & Background Knowledge:** Does understanding the text require specific background knowledge or is the topic generally accessible?
+    * **Processing Load:** How much cognitive effort is required for a learner at the proposed level to fully comprehend the information, follow arguments, or grasp nuanced points?
+
+Your final output should be the exact CEFR level, like the format as follow.
+
+CEFR Level: X
+'''
+
+
+promptName = CEFR_prompt_2
