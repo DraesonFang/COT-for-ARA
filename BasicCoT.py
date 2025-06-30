@@ -14,6 +14,8 @@ def extract_level(text):
         pattern = r"level:\s*(\d+)"
     elif pConf.promptName == pConf.CEFR_prompt or pConf.promptName == pConf.CEFR_prompt_2:
         pattern = r"(?:CEFR|Level)[:\s]*([ABC][12]|Pre-[ABC][12]|[ABC][12][+-]?)"
+    else:
+        pattern = r"(?:CEFR|Level)[:\s]*([ABC][12]|Pre-[ABC][12]|[ABC][12][+-]?)"
     match = re.search(pattern, text, re.IGNORECASE)
     return match.group(1) if match else None
 
@@ -60,7 +62,7 @@ class ZeroShotCoTPipeline:
 
             print(f"Connected to Ollama with model: {self.ollamaModel.model}")
 
-            result = self.ollamaModel.generate_response(prompt)
+            result = self.ollamaModel.generate_response(prompt,temperature=pConf.temperature,top_p=pConf.top_p)
             print(result['response'])
             level = extract_level(result['response'])
             new_row = pd.DataFrame([{'predictions': level, 'true_level': true_level,'reasoning_chains': result['response']}])

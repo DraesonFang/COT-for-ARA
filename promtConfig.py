@@ -6,6 +6,10 @@ corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
 
+#hyperparameters
+temperature = 0.2
+top_p = 0.5
+
 zeroShot_prompt = """
         Analyze the readability of the following text step by step.
 

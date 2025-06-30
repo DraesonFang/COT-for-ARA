@@ -35,7 +35,8 @@ class DataPreparation:
 
     def load_UniversalCEFR(self):
         # UniversalCEFR has 6 levels
-        df = pd.read_json("hf://datasets/UniversalCEFR/readme_en/readme_en.json")
+        dataset = load_dataset("UniversalCEFR/readme_en")
+        df = pd.DataFrame(dataset['train'])
         df = df.rename(columns={"cefr_level": "label"})
         return df
 
@@ -148,7 +149,7 @@ class LLMOllamaInterface:
             print(f"Connection error: {e}")
             return False
 
-    def generate_response(self, prompt: str, temperature: float = 0.7, max_tokens: int = 2000) -> dict:
+    def generate_response(self, prompt: str, temperature: float = 0.7, max_tokens: int = 8000, top_p: float = 0.9) -> dict:
         """
         Send prompt to Ollama and get response
 
@@ -166,7 +167,8 @@ class LLMOllamaInterface:
             "stream": False,
             "options": {
                 "temperature": temperature,
-                "num_predict": max_tokens
+                "num_predict": max_tokens,
+                "top_p": top_p
             }
         }
 
