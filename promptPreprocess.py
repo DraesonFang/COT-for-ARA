@@ -6,6 +6,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import time
 import requests
+from sklearn.metrics import classification_report
 torch.manual_seed(30)
 
 class DataPreparation:
@@ -204,46 +205,6 @@ class EvaluationMetrics:
     def __init__(self):
         self.results = []
 
-    def calculate_accuracy(self, predictions, ground_truth):
+    def calculate_accuracy(self, predictions, ground_truth,target_names):
         """Calculate prediction accuracy"""
-        correct = sum(1 for p, g in zip(predictions, ground_truth) if p == g)
-        return correct / len(predictions)
-
-    def calculate_eqs(self, reasoning_chains):
-        """
-        Calculate Explanation Quality Score (EQS)
-        Based on your formula from the proposal
-        """
-        completeness_scores = []
-        correctness_scores = []
-        consistency_scores = []
-
-        for chain in reasoning_chains:
-            completeness = self.evaluate_completeness(chain)
-            correctness = self.evaluate_correctness(chain)
-            consistency = self.evaluate_consistency(chain)
-
-            completeness_scores.append(completeness)
-            correctness_scores.append(correctness)
-            consistency_scores.append(consistency)
-
-        # Weights as per your proposal
-        w1, w2, w3 = 0.33, 0.33, 0.34  # Equal weights initially
-
-        eqs = np.sqrt(
-            (np.mean(completeness_scores) * w1) ** 2 +
-            (np.mean(correctness_scores) * w2) ** 2 +
-            (np.mean(consistency_scores) * w3) ** 2
-        )
-        return eqs
-
-    def evaluate_completeness(self, reasoning_chain):
-        """Check if all 4 factors are addressed"""
-        factors = [
-            "vocabulary", "sentence structure",
-            "cohesion", "background knowledge"
-        ]
-        addressed = sum(1 for f in factors if f in reasoning_chain.lower())
-        return addressed / len(factors)
-
-
+        return classification_report(y_true=ground_truth, y_pred=predictions, target_names=target_names,output_dict=True)

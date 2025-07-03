@@ -1,10 +1,11 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
 UniversalCEFR_path = "UniversalCEFR/readme_en"
-model = "deepseek-r1:14b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
+model = "deepseek-r1:8b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
 corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
+classification_report_path = "classification_report.csv"
 
 #hyperparameters
 temperature = 0.2
@@ -190,4 +191,34 @@ CEFR Level: X
 '''
 
 
-promptName = CEFR_prompt_2
+CEFR_prompt_4 = r'''
+You are a Common European Framework of Reference for Languages (CEFR) language assessment expert. I will give you a text, and you will estimate its CEFR level (A1 to C2) using a step-by-step reasoning process based on follow rules.
+Rules1:
+Identify the reading purpose and text type first, such as Is it reading for information, argument, leisure, instruction, orientation, or correspondence?
+Rules2: 
+Describe the linguistic features of the text，candidate features include documents length, number of characters per sentence, syllables per sentence and word. Lexical complexity. Average distance between words, parse tree height. etc.
+Rules3:
+Assess the cognitive demands. Does the reader need to infer meaning? Are there abstract concepts, idioms, or multiple viewpoints?
+Rules4:
+Compare findings with CEFR reading descriptors, such as, Choose the most appropriate CEFR level (A1 to C2), referencing typical ability ranges (e.g., A2 = short, simple texts; B2 = complex argument with implied meaning).
+Give your estimated CEFR level and explain your reasoning clearly.
+Text:{0}
+After thinking, please give Your final evaluation, the final output should be the exact CEFR level, like the format as follow.
+CEFR Level: X
+'''
+
+CEFR_prompt_5 = r'''
+You are an expert in language proficiency classification based on the Common European Framework of Reference for Languages (CEFR). Your task is to analyze the given text or narrative and using a step-by-step reasoning process to determine the best CEFR level [A1, A2, B1, B2, C1, or C2] based on the CEFR descriptors of reading comprehension of learners below:
+A1 - I can understand familiar names, words and very simple sentences, for example on notices and posters or in catalogues. 
+A2 - I can read very short, simple texts. I can find specific, predictable information in simple everyday material such as advertisements, prospectuses, menus and timetables and I can understand short simple personal letters.
+B1 - I can understand texts that consist mainly of high frequency everyday or job-related language. I can understand the description of events, feelings and wishes in personal letters. 
+B2 - I can read articles and reports concerned with contemporary problems in which the writers adopt particular attitudes or viewpoints. I can understand contemporary literary prose.
+C1 - I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.
+C2 - I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works
+Give your estimated CEFR level and explain your reasoning clearly. For example, text=” Overall, this strategy is quite effective at handling non-congestive losses without losing throughput” analyze it like ‘The sentence uses precise vocabulary ("strategy," "effective," "handling") and adverbial modifiers ("quite") to convey exact meaning. The use of "non-congestive" and especially "throughput" demonstrates mastery of highly specific, often domain-specific, terminology that A1,A2,B1,B2 learner can’t understand it. But C2 learners can use specialized lexis appropriately. The sentence efficiently packs a lot of information into a single, well-structured clause with a dependent phrase ("without losing throughput"). There's no simplification or circumlocution. The prepositions ("at handling") and the construction ("without losing") are used flawlessly and idiomatically. The overall tone is formal, academic, or technical, typical of C2 output in discussions of complex topics. So I will give this text a C2 level’
+Text:{0}
+After thinking, please give Your final evaluation, the final output should be the exact CEFR level, like the format as follow:
+CEFR Level: X
+'''
+
+promptName = CEFR_prompt_5

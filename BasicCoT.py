@@ -1,4 +1,5 @@
 import json
+import os
 
 from tqdm import tqdm
 
@@ -37,7 +38,7 @@ class ZeroShotCoTPipeline:
         # 2. Process each text
         predictions = []
         reasoning_chains = []
-        pd_result = pd.DataFrame(columns = ['predictions', 'true_level','reasoning_chains'])
+        pd_result = pd.DataFrame(columns = ['Essay ID','Text Essay','Gold Label', 'LLM Output','Pred Label'])
 
         #3. check connect
         self.ollamaModel.check_connection()
@@ -65,22 +66,32 @@ class ZeroShotCoTPipeline:
             result = self.ollamaModel.generate_response(prompt,temperature=pConf.temperature,top_p=pConf.top_p)
             print(result['response'])
             level = extract_level(result['response'])
-            new_row = pd.DataFrame([{'predictions': level, 'true_level': true_level,'reasoning_chains': result['response']}])
+            new_row = pd.DataFrame([{'Essay ID':ind, 'Text Essay':text, 'Gold Label': true_level,'LLM Output': result['response'],'Pred Label': level}])
             pd_result = pd.concat([pd_result, new_row], ignore_index=True)
-            if ind == 200:
+            if ind == 5:
                 break
 
-        self.save_results(pd_result,pConf.acc_output_path)
+        self.calc_accuracy(pd_result, pConf.classification_report_path)
+        self.save_results(pd_result, pConf.acc_output_path)
 
 
     def save_results(self, results, output_path):
         """Save results for analysis"""
         results.to_csv(output_path, index=False)
 
-    def calc_accuracy(self, result_path):
+    def calc_accuracy(self, dataframe,output_path):
         '''return a percentage,ground_truth is true_level, label of prediction is predictions'''
-        df = pd.read_csv(result_path)
-        return self.evaluator.calculate_accuracy(df['predictions'],df['true_level'])
+        target_names = ['A1','A2','B1','B2','C1','C2']
+        report_dict = self.evaluator.calculate_accuracy(dataframe['Pred Label'], dataframe['Gold Label'],target_names)
+        df_report = pd.DataFrame(report_dict).transpose()
+        file_name = output_path
+
+        for i in range(100):
+            if os.path.exists(file_name):
+                file_name = "classification_report"+str(i) +".csv"
+
+        df_report.to_csv("classification_report.csv",index=False)
+
 
 
 if __name__ == '__main__':
