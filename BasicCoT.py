@@ -68,8 +68,8 @@ class ZeroShotCoTPipeline:
             level = extract_level(result['response'])
             new_row = pd.DataFrame([{'Essay ID':ind, 'Text Essay':text, 'Gold Label': true_level,'LLM Output': result['response'],'Pred Label': level}])
             pd_result = pd.concat([pd_result, new_row], ignore_index=True)
-            if ind == 5:
-                break
+            # if ind == 200:
+            #     break
 
         self.calc_accuracy(pd_result, pConf.classification_report_path)
         self.save_results(pd_result, pConf.acc_output_path)
@@ -82,6 +82,7 @@ class ZeroShotCoTPipeline:
     def calc_accuracy(self, dataframe,output_path):
         '''return a percentage,ground_truth is true_level, label of prediction is predictions'''
         target_names = ['A1','A2','B1','B2','C1','C2']
+        dataframe = dataframe.dropna(subset=['Pred Label', 'Gold Label'])
         report_dict = self.evaluator.calculate_accuracy(dataframe['Pred Label'], dataframe['Gold Label'],target_names)
         df_report = pd.DataFrame(report_dict).transpose()
         file_name = output_path
@@ -90,11 +91,10 @@ class ZeroShotCoTPipeline:
             if os.path.exists(file_name):
                 file_name = "classification_report"+str(i) +".csv"
 
-        df_report.to_csv("classification_report.csv",index=False)
+        df_report.to_csv(file_name,index=False)
 
 
 
 if __name__ == '__main__':
     zeroShot_CoT = ZeroShotCoTPipeline(pConf.model,pConf.corpus)
     zeroShot_CoT.run_pipeline()
-    print(zeroShot_CoT.calc_accuracy(pConf.acc_output_path))

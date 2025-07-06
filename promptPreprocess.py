@@ -162,9 +162,18 @@ class LLMOllamaInterface:
         Returns:
             Dictionary containing response and metadata
         """
+
+        chat_messages = [
+            {"role": "system",
+             "content": "You are an expert in CEFR classification. Your job is to assign CEFR levels based on reading comprehension, with detailed reasoning."},
+            {"role": "user",
+             "content": prompt}
+        ]
+
         payload = {
             "model": self.model,
-            "prompt": prompt,
+            # "prompt": prompt,
+            "messages": chat_messages,
             "stream": False,
             "options": {
                 "temperature": temperature,
@@ -175,26 +184,37 @@ class LLMOllamaInterface:
 
         try:
             start_time = time.time()
-            response = self.session.post(f"{self.base_url}/api/generate", json=payload)
+            # response = self.session.post(f"{self.base_url}/api/generate", json=payload)
+
+            response = self.session.post(f"{self.base_url}/api/chat", json=payload)
             end_time = time.time()
+
 
             if response.status_code == 200:
                 result = response.json()
+                content = result.get("message", {}).get("content", "")
                 return {
-                    "success": True,
-                    "response": result.get("response", ""),
-                    "model": result.get("model", self.model),
-                    "total_duration": result.get("total_duration", 0) / 1e9,  # Convert to seconds
-                    "load_duration": result.get("load_duration", 0) / 1e9,
-                    "prompt_eval_count": result.get("prompt_eval_count", 0),
-                    "eval_count": result.get("eval_count", 0),
-                    "response_time": end_time - start_time
+                        "success": True,
+                        "response": content
                 }
-            else:
-                return {
-                    "success": False,
-                    "error": f"HTTP {response.status_code}: {response.text}"
-                }
+
+            # if response.status_code == 200:
+            #     result = response.json()
+            #     return {
+            #         "success": True,
+            #         "response": result.get("response", ""),
+            #         "model": result.get("model", self.model),
+            #         "total_duration": result.get("total_duration", 0) / 1e9,  # Convert to seconds
+            #         "load_duration": result.get("load_duration", 0) / 1e9,
+            #         "prompt_eval_count": result.get("prompt_eval_count", 0),
+            #         "eval_count": result.get("eval_count", 0),
+            #         "response_time": end_time - start_time
+            #     }
+            # else:
+            #     return {
+            #         "success": False,
+            #         "error": f"HTTP {response.status_code}: {response.text}"
+            #     }
         except Exception as e:
             return {
                 "success": False,
@@ -207,4 +227,9 @@ class EvaluationMetrics:
 
     def calculate_accuracy(self, predictions, ground_truth,target_names):
         """Calculate prediction accuracy"""
-        return classification_report(y_true=ground_truth, y_pred=predictions, target_names=target_names,output_dict=True)
+        return classification_report(y_true=ground_truth,
+                                     y_pred=predictions,
+                                     labels=target_names,
+                                     target_names=target_names,
+                                     output_dict=True,
+                                     zero_division=0)
