@@ -83,6 +83,7 @@ class ZeroShotCoTPipeline:
         '''return a percentage,ground_truth is true_level, label of prediction is predictions'''
         target_names = ['A1','A2','B1','B2','C1','C2']
         dataframe = dataframe.dropna(subset=['Pred Label', 'Gold Label'])
+        dataframe = dataframe[dataframe['Pred Label'].isin(target_names) & dataframe['Gold Label'].isin(target_names)]
         report_dict = self.evaluator.calculate_accuracy(dataframe['Pred Label'], dataframe['Gold Label'],target_names)
         df_report = pd.DataFrame(report_dict).transpose()
         file_name = output_path
