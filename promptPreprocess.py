@@ -39,7 +39,12 @@ class DataPreparation:
         dataset = load_dataset("UniversalCEFR/readme_en")
         df = pd.DataFrame(dataset['train'])
         df = df.rename(columns={"cefr_level": "label"})
-        return df
+        # extract the same amount of label
+        balanced_df = df.groupby('label').apply(lambda x: x.sample(n=pConf.data_amount, random_state=42)).reset_index(drop=True)
+        # shuffle the data
+        shuffled_df = balanced_df.iloc[np.random.permutation(len(balanced_df))].reset_index(drop=True)
+
+        return shuffled_df
 
     def load_onestopenglish(self):
         # OneStopEnglish has 3 levels: Elementary, Intermediate, Advanced

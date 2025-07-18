@@ -6,6 +6,7 @@ corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
 classification_report_path = "classification_report.csv"
+data_amount = 40
 
 #hyperparameters
 temperature = 0.3
@@ -236,7 +237,9 @@ C2 - I can read with ease virtually all forms of the written language, including
 
 The given text is:{0}
 
-Give your estimated CEFR level and explain your reasoning clearly, All your outputs are subject to a word limit of 5000 words. For example, text=” Overall, this strategy is quite effective at handling non-congestive losses without losing throughput” analyze it like ‘The sentence uses precise vocabulary ("strategy," "effective," "handling") and adverbial modifiers ("quite") to convey exact meaning. The use of "non-congestive" and especially "throughput" demonstrates mastery of highly specific, often domain-specific, terminology that A1,A2,B1,B2 learner can’t understand it. But C2 learners can use specialized lexis appropriately. The sentence efficiently packs a lot of information into a single, well-structured clause with a dependent phrase ("without losing throughput"). There's no simplification or circumlocution. The prepositions ("at handling") and the construction ("without losing") are used flawlessly and idiomatically. The overall tone is formal, academic, or technical, typical of C2 output in discussions of complex topics. So I will give this text a C2 level’
+Give your estimated CEFR level and explain your reasoning clearly, For example, text=” Overall, this strategy is quite effective at handling non-congestive losses without losing throughput”, your output should be like: ‘The sentence uses precise vocabulary ("strategy," "effective," "handling") and adverbial modifiers ("quite") to convey exact meaning. The use of "non-congestive" and especially "throughput" demonstrates mastery of highly specific, often domain-specific, terminology that A1,A2,B1,B2 learner can’t understand it. But C2 learners can use specialized lexis appropriately. The sentence efficiently packs a lot of information into a single, well-structured clause with a dependent phrase ("without losing throughput"). There's no simplification or circumlocution. The prepositions ("at handling") and the construction ("without losing") are used flawlessly and idiomatically. The overall tone is formal, academic, or technical, typical of C2 output in discussions of complex topics. So I will give this text a C2 level. CEFR Level: C2’
+
+you have 5000 words limitation for your all outputs(include thinking part), especial your thinking part, only 3000 words allowed.
 
 After thinking, please output the result of the given text in the following format:
 CEFR Level: <Level>

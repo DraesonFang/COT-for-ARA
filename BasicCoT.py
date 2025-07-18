@@ -68,8 +68,8 @@ class ZeroShotCoTPipeline:
             level = extract_level(result['response'])
             new_row = pd.DataFrame([{'Essay ID':ind, 'Text Essay':text, 'Gold Label': true_level,'LLM Output': result['response'],'Pred Label': level}])
             pd_result = pd.concat([pd_result, new_row], ignore_index=True)
-            if ind == 200:
-                break
+            # if ind == 200:
+            #     break
 
         self.calc_accuracy(pd_result, pConf.classification_report_path)
         self.save_results(pd_result, pConf.acc_output_path)
