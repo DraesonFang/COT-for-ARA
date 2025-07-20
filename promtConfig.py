@@ -1,12 +1,12 @@
 weebit_path = "Dataset/weebit_reextracted.tsv"
 onestopenglish_path = "iastate/onestop_english"
-UniversalCEFR_path = "UniversalCEFR/readme_en"
-model = "deepseek-r1:8b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
+UniversalCEFR_path = "UniversalCEFR/readme_en" #UniversalCEFR/cefr_sp_en, UniversalCEFR/readme_en
+model = "qwen3:32b" #(options: deepseek-r1:14b,deepseek-r1:32b,deepseek, qwen, llama)
 corpus = 'UniversalCEFR' #(options: weebit, onestopenglish,UniversalCEFR)
 level = 5
 acc_output_path = "level.csv"
 classification_report_path = "classification_report.csv"
-data_amount = 40
+data_amount = 71
 
 #hyperparameters
 temperature = 0.3
@@ -242,6 +242,23 @@ Give your estimated CEFR level and explain your reasoning clearly, For example, 
 you have 5000 words limitation for your all outputs(include thinking part), especial your thinking part, only 3000 words allowed.
 
 After thinking, please output the result of the given text in the following format:
+CEFR Level: <Level>
+"""
+
+CEFR_prompt_7 = r"""
+Analyze the given text and determine the best CEFR level [A1, A2, B1, B2, C1, or C2] based on the CEFR descriptors of reading comprehension of learners below:
+A1 - I can understand familiar names, words and very simple sentences, for example on notices and posters or in catalogues. 
+A2 - I can read very short, simple texts. I can find specific, predictable information in simple everyday material such as advertisements, prospectuses, menus and timetables and I can understand short simple personal letters.
+B1 - I can understand texts that consist mainly of high frequency everyday or job-related language. I can understand the description of events, feelings and wishes in personal letters. 
+B2 - I can read articles and reports concerned with contemporary problems in which the writers adopt particular attitudes or viewpoints. I can understand contemporary literary prose.
+C1 - I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.
+C2 - I can read with ease virtually all forms of the written language, including abstract, structurally or linguistically complex texts such as manuals, specialised articles and literary works
+
+The given text is:{0}
+
+Provide only the CEFR level as output directly, without explanation or justification
+
+please output the result of the given text in the following format:
 CEFR Level: <Level>
 """
 promptName = CEFR_prompt_6

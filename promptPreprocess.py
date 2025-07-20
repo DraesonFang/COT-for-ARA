@@ -36,7 +36,7 @@ class DataPreparation:
 
     def load_UniversalCEFR(self):
         # UniversalCEFR has 6 levels
-        dataset = load_dataset("UniversalCEFR/readme_en")
+        dataset = load_dataset(pConf.UniversalCEFR_path)
         df = pd.DataFrame(dataset['train'])
         df = df.rename(columns={"cefr_level": "label"})
         # extract the same amount of label
